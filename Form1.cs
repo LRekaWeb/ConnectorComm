@@ -27,12 +27,7 @@ namespace ConnectorComm
             }
         }
 
-        private void txtLinkV_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            validateTextLink((TextBox)sender);
-        }
-
-        private void txtLinkP_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void txtLink_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
             validateTextLink((TextBox)sender);
         }

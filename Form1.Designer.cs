@@ -121,7 +121,7 @@
             this.txtLinkV.Name = "txtLinkV";
             this.txtLinkV.Size = new System.Drawing.Size(172, 27);
             this.txtLinkV.TabIndex = 5;
-            this.txtLinkV.Validating += new System.ComponentModel.CancelEventHandler(this.txtLinkV_Validating);
+            this.txtLinkV.Validating += new System.ComponentModel.CancelEventHandler(this.txtLink_Validating);
             // 
             // brwV
             // 
@@ -172,7 +172,7 @@
             this.txtLinkP.Name = "txtLinkP";
             this.txtLinkP.Size = new System.Drawing.Size(172, 27);
             this.txtLinkP.TabIndex = 11;
-            this.txtLinkP.Validating += new System.ComponentModel.CancelEventHandler(this.txtLinkP_Validating);
+            this.txtLinkP.Validating += new System.ComponentModel.CancelEventHandler(this.txtLink_Validating);
             // 
             // label7
             // 
