@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 
 namespace ConnectorComm
 {
@@ -23,11 +24,11 @@ namespace ConnectorComm
             }
         }
 
-        /**
-         * Save settings.
-         */
+        // Save settings entered in the form fields.
         private void btnOk_Click(object sender, EventArgs e)
         {
+            // @todo Add for mvalidation using error provider.
+            //DialogResult = DialogResult.None;
             Properties.Settings.Default.vIntervalMin = (int) numIntV.Value;
             Properties.Settings.Default.pIntervalHour = (int) numIntP.Value;
             if (this.isValidUrl(txtLinkV.Text) || txtLinkV.Text == String.Empty)
@@ -46,17 +47,30 @@ namespace ConnectorComm
             {
                 MessageBox.Show("Adresa URL invalida: " + txtLinkP.Text);
             }
-
             Properties.Settings.Default.pLink = txtLinkP.Text;
             Properties.Settings.Default.vFolder = brwV.Text;
             Properties.Settings.Default.pFolder = brwP.Text;
             Properties.Settings.Default.Save();
         }
 
+        private void configToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowDialog();
+        }
+
+        private void notifyIcon1_DoubleClick(object sender, EventArgs e)
+        {
+            ShowDialog();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
         private bool isValidUrl(string url)
         {
-            Uri uriResult;
-            return Uri.TryCreate(url, UriKind.Absolute, out uriResult)
+            return Uri.TryCreate(url, UriKind.Absolute, out Uri? uriResult)
                 && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
         }
 
@@ -76,15 +90,10 @@ namespace ConnectorComm
             }
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private async void sincronizarevanzariToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string newPkuld = Properties.Settings.Default.vFolder + @"/pkuld.0001";
-            using (FileStream fs = File.Create(newPkuld));
+            using FileStream fs = File.Create(newPkuld);
             using StreamWriter filePkuld = new(newPkuld, append: true);
             await filePkuld.WriteLineAsync("2032-00");
             /*autoTimer.Enabled = true;

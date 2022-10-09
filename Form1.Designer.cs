@@ -46,13 +46,12 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.vanzariToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sincronizarevanzariToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sincronizareproduseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.configToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.syncSalesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.syncProductsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.autoTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numIntV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIntP)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -61,63 +60,70 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(48, 9);
+            this.label1.Location = new System.Drawing.Point(23, 4);
+            this.label1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(113, 41);
+            this.label1.Size = new System.Drawing.Size(57, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "Vanzari";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(451, 9);
+            this.label2.Location = new System.Drawing.Point(212, 4);
+            this.label2.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(127, 41);
+            this.label2.Size = new System.Drawing.Size(62, 20);
             this.label2.TabIndex = 1;
             this.label2.Text = "Produse";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(48, 58);
+            this.label3.Location = new System.Drawing.Point(23, 28);
+            this.label3.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(191, 41);
+            this.label3.Size = new System.Drawing.Size(97, 20);
             this.label3.TabIndex = 2;
             this.label3.Text = "Interval (min)";
             // 
             // numIntV
             // 
-            this.numIntV.Location = new System.Drawing.Point(48, 109);
+            this.numIntV.Location = new System.Drawing.Point(23, 53);
+            this.numIntV.Margin = new System.Windows.Forms.Padding(1);
             this.numIntV.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numIntV.Name = "numIntV";
-            this.numIntV.Size = new System.Drawing.Size(96, 47);
+            this.numIntV.Size = new System.Drawing.Size(45, 27);
             this.numIntV.TabIndex = 3;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(48, 186);
+            this.label4.Location = new System.Drawing.Point(23, 91);
+            this.label4.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(71, 41);
+            this.label4.Size = new System.Drawing.Size(35, 20);
             this.label4.TabIndex = 4;
             this.label4.Text = "Link";
             // 
             // txtLinkV
             // 
-            this.txtLinkV.Location = new System.Drawing.Point(48, 230);
+            this.txtLinkV.Location = new System.Drawing.Point(23, 112);
+            this.txtLinkV.Margin = new System.Windows.Forms.Padding(1);
             this.txtLinkV.Name = "txtLinkV";
-            this.txtLinkV.Size = new System.Drawing.Size(360, 47);
+            this.txtLinkV.Size = new System.Drawing.Size(172, 27);
             this.txtLinkV.TabIndex = 5;
             // 
             // brwV
             // 
-            this.brwV.Location = new System.Drawing.Point(48, 343);
+            this.brwV.Location = new System.Drawing.Point(23, 167);
+            this.brwV.Margin = new System.Windows.Forms.Padding(1);
             this.brwV.Name = "brwV";
-            this.brwV.Size = new System.Drawing.Size(360, 58);
+            this.brwV.Size = new System.Drawing.Size(169, 28);
             this.brwV.TabIndex = 6;
             this.brwV.Text = "Browse Folders";
             this.brwV.UseVisualStyleBackColor = true;
@@ -126,26 +132,29 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(48, 299);
+            this.label5.Location = new System.Drawing.Point(23, 146);
+            this.label5.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(102, 41);
+            this.label5.Size = new System.Drawing.Size(51, 20);
             this.label5.TabIndex = 7;
             this.label5.Text = "Folder";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(451, 299);
+            this.label6.Location = new System.Drawing.Point(212, 146);
+            this.label6.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(102, 41);
+            this.label6.Size = new System.Drawing.Size(51, 20);
             this.label6.TabIndex = 13;
             this.label6.Text = "Folder";
             // 
             // brwP
             // 
-            this.brwP.Location = new System.Drawing.Point(451, 343);
+            this.brwP.Location = new System.Drawing.Point(212, 167);
+            this.brwP.Margin = new System.Windows.Forms.Padding(1);
             this.brwP.Name = "brwP";
-            this.brwP.Size = new System.Drawing.Size(360, 58);
+            this.brwP.Size = new System.Drawing.Size(169, 28);
             this.brwP.TabIndex = 12;
             this.brwP.Text = "Browse Folders";
             this.brwP.UseVisualStyleBackColor = true;
@@ -153,38 +162,42 @@
             // 
             // txtLinkP
             // 
-            this.txtLinkP.Location = new System.Drawing.Point(451, 230);
+            this.txtLinkP.Location = new System.Drawing.Point(212, 112);
+            this.txtLinkP.Margin = new System.Windows.Forms.Padding(1);
             this.txtLinkP.Name = "txtLinkP";
-            this.txtLinkP.Size = new System.Drawing.Size(360, 47);
+            this.txtLinkP.Size = new System.Drawing.Size(172, 27);
             this.txtLinkP.TabIndex = 11;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(451, 186);
+            this.label7.Location = new System.Drawing.Point(212, 91);
+            this.label7.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(71, 41);
+            this.label7.Size = new System.Drawing.Size(35, 20);
             this.label7.TabIndex = 10;
             this.label7.Text = "Link";
             // 
             // numIntP
             // 
-            this.numIntP.Location = new System.Drawing.Point(451, 109);
+            this.numIntP.Location = new System.Drawing.Point(212, 53);
+            this.numIntP.Margin = new System.Windows.Forms.Padding(1);
             this.numIntP.Maximum = new decimal(new int[] {
             24,
             0,
             0,
             0});
             this.numIntP.Name = "numIntP";
-            this.numIntP.Size = new System.Drawing.Size(89, 47);
+            this.numIntP.Size = new System.Drawing.Size(42, 27);
             this.numIntP.TabIndex = 9;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(451, 58);
+            this.label8.Location = new System.Drawing.Point(212, 28);
+            this.label8.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(185, 41);
+            this.label8.Size = new System.Drawing.Size(94, 20);
             this.label8.TabIndex = 8;
             this.label8.Text = "Interval (ore)";
             // 
@@ -193,49 +206,53 @@
             this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
             this.notifyIcon1.Text = "ConnectorComm";
             this.notifyIcon1.Visible = true;
+            this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
             // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.vanzariToolStripMenuItem,
-            this.sincronizarevanzariToolStripMenuItem,
-            this.sincronizareproduseToolStripMenuItem,
+            this.configToolStripMenuItem,
+            this.syncSalesToolStripMenuItem,
+            this.syncProductsToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(376, 196);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(218, 100);
             // 
-            // vanzariToolStripMenuItem
+            // configToolStripMenuItem
             // 
-            this.vanzariToolStripMenuItem.Name = "vanzariToolStripMenuItem";
-            this.vanzariToolStripMenuItem.Size = new System.Drawing.Size(375, 48);
-            this.vanzariToolStripMenuItem.Text = "&Configurare";
+            this.configToolStripMenuItem.Name = "configToolStripMenuItem";
+            this.configToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
+            this.configToolStripMenuItem.Text = "&Configurare";
+            this.configToolStripMenuItem.Click += new System.EventHandler(this.configToolStripMenuItem_Click);
             // 
-            // sincronizarevanzariToolStripMenuItem
+            // syncSalesToolStripMenuItem
             // 
-            this.sincronizarevanzariToolStripMenuItem.Name = "sincronizarevanzariToolStripMenuItem";
-            this.sincronizarevanzariToolStripMenuItem.Size = new System.Drawing.Size(375, 48);
-            this.sincronizarevanzariToolStripMenuItem.Text = "Sincronizare &vanzari";
-            this.sincronizarevanzariToolStripMenuItem.Click += new System.EventHandler(this.sincronizarevanzariToolStripMenuItem_Click);
+            this.syncSalesToolStripMenuItem.Name = "syncSalesToolStripMenuItem";
+            this.syncSalesToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
+            this.syncSalesToolStripMenuItem.Text = "Sincronizare &vanzari";
+            this.syncSalesToolStripMenuItem.Click += new System.EventHandler(this.sincronizarevanzariToolStripMenuItem_Click);
             // 
-            // sincronizareproduseToolStripMenuItem
+            // syncProductsToolStripMenuItem
             // 
-            this.sincronizareproduseToolStripMenuItem.Name = "sincronizareproduseToolStripMenuItem";
-            this.sincronizareproduseToolStripMenuItem.Size = new System.Drawing.Size(375, 48);
-            this.sincronizareproduseToolStripMenuItem.Text = "Sincronizare &produse";
+            this.syncProductsToolStripMenuItem.Name = "syncProductsToolStripMenuItem";
+            this.syncProductsToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
+            this.syncProductsToolStripMenuItem.Text = "Sincronizare &produse";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(375, 48);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(220, 474);
+            this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOk.Location = new System.Drawing.Point(104, 231);
+            this.btnOk.Margin = new System.Windows.Forms.Padding(1);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(188, 58);
+            this.btnOk.Size = new System.Drawing.Size(88, 28);
             this.btnOk.TabIndex = 17;
             this.btnOk.Text = "&Ok";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -243,25 +260,22 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(451, 474);
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(212, 231);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(1);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(188, 58);
+            this.btnCancel.Size = new System.Drawing.Size(88, 28);
             this.btnCancel.TabIndex = 18;
             this.btnCancel.Text = "&Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
-            // autoTimer
-            // 
-            this.autoTimer.Interval = 15000;
-            this.autoTimer.Tick += new System.EventHandler(this.sincronizarevanzariToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AcceptButton = this.btnOk;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(17F, 41F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(868, 612);
+            this.ClientSize = new System.Drawing.Size(408, 299);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.label6);
@@ -278,7 +292,12 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(1);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Form1";
+            this.ShowInTaskbar = false;
             this.Text = "ConnectorComm";
             ((System.ComponentModel.ISupportInitialize)(this.numIntV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIntP)).EndInit();
@@ -307,12 +326,11 @@
         private FolderBrowserDialog folderBrowserDialog1;
         private NotifyIcon notifyIcon1;
         private ContextMenuStrip contextMenuStrip1;
-        private ToolStripMenuItem vanzariToolStripMenuItem;
-        private ToolStripMenuItem sincronizarevanzariToolStripMenuItem;
-        private ToolStripMenuItem sincronizareproduseToolStripMenuItem;
+        private ToolStripMenuItem configToolStripMenuItem;
+        private ToolStripMenuItem syncSalesToolStripMenuItem;
+        private ToolStripMenuItem syncProductsToolStripMenuItem;
         private Button btnOk;
         private Button btnCancel;
         private ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.Timer autoTimer;
     }
 }
