@@ -14,6 +14,7 @@ namespace ConnectorComm
         // Save settings entered in the form fields.
         private void btnOk_Click(object sender, EventArgs e)
         {
+            validateForm();
             if (errorProvider1.GetError(txtLinkV) != String.Empty || errorProvider1.GetError(txtLinkP) != String.Empty)
             {
                 // Do not close the dialog on error.
@@ -23,6 +24,16 @@ namespace ConnectorComm
             {
                 saveSettings();
             }
+        }
+
+        private void txtLinkV_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            validateTextLink((TextBox)sender);
+        }
+
+        private void txtLinkP_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            validateTextLink((TextBox)sender);
         }
 
         private void brwV_Click(object sender, EventArgs e)
@@ -43,11 +54,13 @@ namespace ConnectorComm
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
+            loadSettings();
             ShowDialog();
         }
 
         private void configToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            loadSettings();
             ShowDialog();
         }
 
@@ -72,6 +85,17 @@ namespace ConnectorComm
             }*/
         }
 
+        private void syncProductsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // @todo
+        }
+
+        private void validateForm()
+        {
+            validateTextLink(txtLinkV);
+            validateTextLink(txtLinkP);
+        }
+
         private void loadSettings()
         {
             numIntV.Value = Properties.Settings.Default.vIntervalMin;
@@ -86,6 +110,8 @@ namespace ConnectorComm
             {
                 brwP.Text = Properties.Settings.Default.pFolder;
             }
+            // Validate after reload.
+            validateForm();
         }
 
         private void saveSettings()
@@ -100,19 +126,8 @@ namespace ConnectorComm
             Properties.Settings.Default.Save();
         }
 
-        private void txtLinkV_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            validateTextLink((TextBox)sender);
-        }
-
-        private void txtLinkP_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            validateTextLink((TextBox)sender);
-        }
-
         private void validateTextLink(TextBox txtLink)
         {
-            //e.Cancel = true;
             bool isValidUrl = Uri.TryCreate(txtLink.Text, UriKind.Absolute, out Uri? uriResult)
                 && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
             if (isValidUrl || txtLink.Text == String.Empty)

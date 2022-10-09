@@ -221,7 +221,7 @@
             this.syncProductsToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(218, 100);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(218, 128);
             // 
             // configToolStripMenuItem
             // 
@@ -242,6 +242,7 @@
             this.syncProductsToolStripMenuItem.Name = "syncProductsToolStripMenuItem";
             this.syncProductsToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
             this.syncProductsToolStripMenuItem.Text = "Sincronizare &produse";
+            this.syncProductsToolStripMenuItem.Click += new System.EventHandler(this.syncProductsToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
