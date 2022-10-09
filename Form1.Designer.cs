@@ -53,6 +53,8 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.timerV = new System.Windows.Forms.Timer(this.components);
+            this.timerP = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numIntV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIntP)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -221,7 +223,7 @@
             this.syncProductsToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(218, 128);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(218, 100);
             // 
             // configToolStripMenuItem
             // 
@@ -277,6 +279,16 @@
             // errorProvider1
             // 
             this.errorProvider1.ContainerControl = this;
+            // 
+            // timerV
+            // 
+            this.timerV.Interval = 30000;
+            this.timerV.Tick += new System.EventHandler(this.timerV_Tick);
+            // 
+            // timerP
+            // 
+            this.timerP.Interval = 3600;
+            this.timerP.Tick += new System.EventHandler(this.timerP_Tick);
             // 
             // Form1
             // 
@@ -343,5 +355,7 @@
         private Button btnCancel;
         private ToolStripMenuItem exitToolStripMenuItem;
         private ErrorProvider errorProvider1;
+        private System.Windows.Forms.Timer timerV;
+        private System.Windows.Forms.Timer timerP;
     }
 }

@@ -1,4 +1,4 @@
-using System.Security.Policy;
+using Timer = System.Windows.Forms.Timer;
 
 namespace ConnectorComm
 {
@@ -9,6 +9,7 @@ namespace ConnectorComm
             InitializeComponent();
             notifyIcon1.Icon = Icon;
             loadSettings();
+            initTimers();
         }
 
         // Save settings entered in the form fields.
@@ -71,23 +72,12 @@ namespace ConnectorComm
 
         private async void syncSalesToolStripMenuItem_ClickAsync(object sender, EventArgs e)
         {
-            string newPkuld = Properties.Settings.Default.vFolder + @"/pkuld.0001";
-            using FileStream fs = File.Create(newPkuld);
-            using StreamWriter filePkuld = new(newPkuld, append: true);
-            await filePkuld.WriteLineAsync("2032-00");
-            /*autoTimer.Enabled = true;
-            if (autoTimer.Tick)
-            {
-                if (!isPkapCorrect())
-                {
-                    File.Delete(Properties.Settings.Default.vFolder + @"/pkap.0001");
-                }
-            }*/
+            syncSales();
         }
 
         private void syncProductsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // @todo
+            syncProducts();
         }
 
         private void validateForm()
@@ -124,6 +114,7 @@ namespace ConnectorComm
             Properties.Settings.Default.vFolder = brwV.Text;
             Properties.Settings.Default.pFolder = brwP.Text;
             Properties.Settings.Default.Save();
+            initTimers();
         }
 
         private void validateTextLink(TextBox txtLink)
@@ -141,10 +132,66 @@ namespace ConnectorComm
             }
         }
 
+        private void initTimers()
+        {
+            // Sales-sync requires a web server URL.
+            timerV.Stop();
+            if (Properties.Settings.Default.vLink != String.Empty && Properties.Settings.Default.vFolder != String.Empty)
+            {
+                timerV.Interval = Properties.Settings.Default.vIntervalMin * 60 * 1000;
+                timerV.Start();
+            }
+            // Product-sync requires a web server URL.
+            timerP.Stop();
+            if (Properties.Settings.Default.pLink != String.Empty && Properties.Settings.Default.pFolder != String.Empty)
+            {
+                timerP.Interval = Properties.Settings.Default.pIntervalHour * 3600 * 1000;
+                timerP.Start();
+            }
+        }
+
+        private void timerV_Tick(object sender, EventArgs e)
+        {
+            syncSales();
+        }
+
+        private void timerP_Tick(object sender, EventArgs e)
+        {
+            syncProducts();
+        }
+
         private bool isPkapCorrect()
         {
             string content = File.ReadAllText(Properties.Settings.Default.vFolder + @"/pkap.0001");
             return content != "03" && content != String.Empty;
+        }
+
+        private async void syncSales()
+        {
+            // @todo Incremental file extensions.
+            /*string newPkuld = Properties.Settings.Default.vFolder + @"/pkuld.0001";
+            using FileStream fs = File.Create(newPkuld);
+            using StreamWriter filePkuld = new(newPkuld, append: true);
+            await filePkuld.WriteLineAsync("2032-00");*/
+            // Wait for a response file.
+            Timer timer = new Timer();
+            timer.Tick += new EventHandler((sender, e) => {
+                notifyIcon1.ShowBalloonTip(500, "ConnectorComm", "Timer test", ToolTipIcon.None);
+                ((Timer)sender).Stop();
+                //timer.Stop();
+                //timer.Dispose();
+                //if (!isPkapCorrect())
+                //{
+                //    File.Delete(Properties.Settings.Default.vFolder + @"/pkap.0001");
+                //}
+            });
+            timer.Interval = 1000;
+            timer.Start();
+        }
+
+        private void syncProducts()
+        {
+            // @todo
         }
     }
 }
