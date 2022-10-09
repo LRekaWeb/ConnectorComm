@@ -5,7 +5,7 @@
     <Setting Name="vIntervalMin" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="vLink" Type="(Web Service URL)" Scope="User">
+    <Setting Name="vLink" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="vFolder" Type="System.String" Scope="User">
@@ -14,7 +14,7 @@
     <Setting Name="pIntervalHour" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="pLink" Type="(Web Service URL)" Scope="User">
+    <Setting Name="pLink" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="pFolder" Type="System.String" Scope="User">

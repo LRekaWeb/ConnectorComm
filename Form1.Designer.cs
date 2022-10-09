@@ -52,9 +52,11 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numIntV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIntP)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -117,6 +119,7 @@
             this.txtLinkV.Name = "txtLinkV";
             this.txtLinkV.Size = new System.Drawing.Size(172, 27);
             this.txtLinkV.TabIndex = 5;
+            this.txtLinkV.Validating += new System.ComponentModel.CancelEventHandler(this.txtLinkV_Validating);
             // 
             // brwV
             // 
@@ -167,6 +170,7 @@
             this.txtLinkP.Name = "txtLinkP";
             this.txtLinkP.Size = new System.Drawing.Size(172, 27);
             this.txtLinkP.TabIndex = 11;
+            this.txtLinkP.Validating += new System.ComponentModel.CancelEventHandler(this.txtLinkP_Validating);
             // 
             // label7
             // 
@@ -231,7 +235,7 @@
             this.syncSalesToolStripMenuItem.Name = "syncSalesToolStripMenuItem";
             this.syncSalesToolStripMenuItem.Size = new System.Drawing.Size(217, 24);
             this.syncSalesToolStripMenuItem.Text = "Sincronizare &vanzari";
-            this.syncSalesToolStripMenuItem.Click += new System.EventHandler(this.sincronizarevanzariToolStripMenuItem_Click);
+            this.syncSalesToolStripMenuItem.Click += new System.EventHandler(this.syncSalesToolStripMenuItem_ClickAsync);
             // 
             // syncProductsToolStripMenuItem
             // 
@@ -269,6 +273,10 @@
             this.btnCancel.Text = "&Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
+            // 
             // Form1
             // 
             this.AcceptButton = this.btnOk;
@@ -302,6 +310,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numIntV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIntP)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -332,5 +341,6 @@
         private Button btnOk;
         private Button btnCancel;
         private ToolStripMenuItem exitToolStripMenuItem;
+        private ErrorProvider errorProvider1;
     }
 }

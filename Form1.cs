@@ -1,5 +1,4 @@
-using System.Runtime.CompilerServices;
-using System.Windows.Forms;
+using System.Security.Policy;
 
 namespace ConnectorComm
 {
@@ -9,69 +8,21 @@ namespace ConnectorComm
         {
             InitializeComponent();
             notifyIcon1.Icon = Icon;
-            // Read settings.
-            numIntV.Value = Properties.Settings.Default.vIntervalMin;
-            numIntP.Value = Properties.Settings.Default.pIntervalHour;
-            txtLinkV.Text = Properties.Settings.Default.vLink;
-            txtLinkP.Text = Properties.Settings.Default.pLink;
-            if (Properties.Settings.Default.vFolder != String.Empty)
-            {
-                brwV.Text = Properties.Settings.Default.vFolder;
-            }
-            if (Properties.Settings.Default.pFolder != String.Empty)
-            {
-                brwP.Text = Properties.Settings.Default.pFolder;
-            }
+            loadSettings();
         }
 
         // Save settings entered in the form fields.
         private void btnOk_Click(object sender, EventArgs e)
         {
-            // @todo Add for mvalidation using error provider.
-            //DialogResult = DialogResult.None;
-            Properties.Settings.Default.vIntervalMin = (int) numIntV.Value;
-            Properties.Settings.Default.pIntervalHour = (int) numIntP.Value;
-            if (this.isValidUrl(txtLinkV.Text) || txtLinkV.Text == String.Empty)
+            if (errorProvider1.GetError(txtLinkV) != String.Empty || errorProvider1.GetError(txtLinkP) != String.Empty)
             {
-                Properties.Settings.Default.vLink = txtLinkV.Text;
+                // Do not close the dialog on error.
+                DialogResult = DialogResult.None;
             }
             else
             {
-                MessageBox.Show("Adresa URL invalida: " + txtLinkV.Text);
+                saveSettings();
             }
-            if (this.isValidUrl(txtLinkP.Text) || txtLinkP.Text == String.Empty)
-            {
-                Properties.Settings.Default.vLink = txtLinkP.Text;
-            }
-            else
-            {
-                MessageBox.Show("Adresa URL invalida: " + txtLinkP.Text);
-            }
-            Properties.Settings.Default.pLink = txtLinkP.Text;
-            Properties.Settings.Default.vFolder = brwV.Text;
-            Properties.Settings.Default.pFolder = brwP.Text;
-            Properties.Settings.Default.Save();
-        }
-
-        private void configToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowDialog();
-        }
-
-        private void notifyIcon1_DoubleClick(object sender, EventArgs e)
-        {
-            ShowDialog();
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private bool isValidUrl(string url)
-        {
-            return Uri.TryCreate(url, UriKind.Absolute, out Uri? uriResult)
-                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
         }
 
         private void brwV_Click(object sender, EventArgs e)
@@ -90,7 +41,22 @@ namespace ConnectorComm
             }
         }
 
-        private async void sincronizarevanzariToolStripMenuItem_Click(object sender, EventArgs e)
+        private void notifyIcon1_DoubleClick(object sender, EventArgs e)
+        {
+            ShowDialog();
+        }
+
+        private void configToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowDialog();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private async void syncSalesToolStripMenuItem_ClickAsync(object sender, EventArgs e)
         {
             string newPkuld = Properties.Settings.Default.vFolder + @"/pkuld.0001";
             using FileStream fs = File.Create(newPkuld);
@@ -103,14 +69,67 @@ namespace ConnectorComm
                 {
                     File.Delete(Properties.Settings.Default.vFolder + @"/pkap.0001");
                 }
-            }*/   
+            }*/
+        }
 
+        private void loadSettings()
+        {
+            numIntV.Value = Properties.Settings.Default.vIntervalMin;
+            numIntP.Value = Properties.Settings.Default.pIntervalHour;
+            txtLinkV.Text = Properties.Settings.Default.vLink;
+            txtLinkP.Text = Properties.Settings.Default.pLink;
+            if (Properties.Settings.Default.vFolder != String.Empty)
+            {
+                brwV.Text = Properties.Settings.Default.vFolder;
+            }
+            if (Properties.Settings.Default.pFolder != String.Empty)
+            {
+                brwP.Text = Properties.Settings.Default.pFolder;
+            }
+        }
+
+        private void saveSettings()
+        {
+            Properties.Settings.Default.vIntervalMin = (int)numIntV.Value;
+            Properties.Settings.Default.pIntervalHour = (int)numIntP.Value;
+            Properties.Settings.Default.vLink = txtLinkV.Text;
+            Properties.Settings.Default.vLink = txtLinkP.Text;
+            Properties.Settings.Default.pLink = txtLinkP.Text;
+            Properties.Settings.Default.vFolder = brwV.Text;
+            Properties.Settings.Default.pFolder = brwP.Text;
+            Properties.Settings.Default.Save();
+        }
+
+        private void txtLinkV_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            validateTextLink((TextBox)sender);
+        }
+
+        private void txtLinkP_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            validateTextLink((TextBox)sender);
+        }
+
+        private void validateTextLink(TextBox txtLink)
+        {
+            //e.Cancel = true;
+            bool isValidUrl = Uri.TryCreate(txtLink.Text, UriKind.Absolute, out Uri? uriResult)
+                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            if (isValidUrl || txtLink.Text == String.Empty)
+            {
+                // Clear the error.
+                errorProvider1.SetError(txtLink, String.Empty);
+            }
+            else
+            {
+                errorProvider1.SetError(txtLink, "Adresa URL invalida.");
+            }
         }
 
         private bool isPkapCorrect()
         {
             string content = File.ReadAllText(Properties.Settings.Default.vFolder + @"/pkap.0001");
-            return content != "03" && content != String.Empty; 
+            return content != "03" && content != String.Empty;
         }
     }
 }
