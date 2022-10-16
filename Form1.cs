@@ -1,9 +1,21 @@
+using System;
+using System.Diagnostics;
+using System.Net;
+using System.Security.Policy;
+using System.Text;
 using Timer = System.Windows.Forms.Timer;
 
 namespace ConnectorComm
 {
     public partial class Form1 : Form
     {
+
+        private int vCount = 1;
+
+        private int pCount = 1;
+
+        private HttpClient httpClient = new HttpClient();
+
         public Form1()
         {
             InitializeComponent();
@@ -51,13 +63,19 @@ namespace ConnectorComm
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
             loadSettings();
-            ShowDialog();
+            if (!this.Visible)
+            { 
+                ShowDialog(); 
+            }
         }
 
         private void configToolStripMenuItem_Click(object sender, EventArgs e)
         {
             loadSettings();
-            ShowDialog();
+            if (!this.Visible)
+            { 
+                ShowDialog(); 
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -67,12 +85,22 @@ namespace ConnectorComm
 
         private async void syncSalesToolStripMenuItem_ClickAsync(object sender, EventArgs e)
         {
-            syncSales();
+            if (checkSalesConfig())
+            {
+                vCount++;
+                syncSales();
+                vCount--;
+            }
         }
 
         private void syncProductsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            syncProducts();
+            if (checkProductsConfig())
+            {
+                pCount++;
+                syncProducts();
+                vCount--;
+            }
         }
 
         private void validateForm()
@@ -104,7 +132,6 @@ namespace ConnectorComm
             Properties.Settings.Default.vIntervalMin = (int)numIntV.Value;
             Properties.Settings.Default.pIntervalHour = (int)numIntP.Value;
             Properties.Settings.Default.vLink = txtLinkV.Text;
-            Properties.Settings.Default.vLink = txtLinkP.Text;
             Properties.Settings.Default.pLink = txtLinkP.Text;
             Properties.Settings.Default.vFolder = brwV.Text;
             Properties.Settings.Default.pFolder = brwP.Text;
@@ -127,18 +154,29 @@ namespace ConnectorComm
             }
         }
 
+        private bool checkSalesConfig()
+        {
+            return  Properties.Settings.Default.vLink != String.Empty && Properties.Settings.Default.vFolder != String.Empty;
+        }
+
+        private bool checkProductsConfig()
+        {
+            return Properties.Settings.Default.pLink != String.Empty && Properties.Settings.Default.pFolder != String.Empty;
+        }
+
         private void initTimers()
         {
             // Sales-sync requires a web server URL.
             timerV.Stop();
-            if (Properties.Settings.Default.vLink != String.Empty && Properties.Settings.Default.vFolder != String.Empty)
+            if (Properties.Settings.Default.vIntervalMin > 0 && checkSalesConfig())
             {
-                timerV.Interval = Properties.Settings.Default.vIntervalMin * 60 * 1000;
+                //timerV.Interval = Properties.Settings.Default.vIntervalMin * 60 * 1000;
+                timerV.Interval = 1000;
                 timerV.Start();
             }
             // Product-sync requires a web server URL.
             timerP.Stop();
-            if (Properties.Settings.Default.pLink != String.Empty && Properties.Settings.Default.pFolder != String.Empty)
+            if (Properties.Settings.Default.pIntervalHour > 0 && checkProductsConfig())
             {
                 timerP.Interval = Properties.Settings.Default.pIntervalHour * 3600 * 1000;
                 timerP.Start();
@@ -155,38 +193,131 @@ namespace ConnectorComm
             syncProducts();
         }
 
-        private bool isPkapCorrect()
-        {
-            string content = File.ReadAllText(Properties.Settings.Default.vFolder + @"/pkap.0001");
-            return content != "03" && content != String.Empty;
-        }
-
         private async void syncSales()
         {
-            // @todo Incremental file extensions.
-            /*string newPkuld = Properties.Settings.Default.vFolder + @"/pkuld.0001";
-            using FileStream fs = File.Create(newPkuld);
-            using StreamWriter filePkuld = new(newPkuld, append: true);
-            await filePkuld.WriteLineAsync("2032-00");*/
-            // Wait for a response file.
-            Timer timer = new Timer();
-            timer.Tick += new EventHandler((sender, e) => {
-                notifyIcon1.ShowBalloonTip(500, "ConnectorComm", "Timer test", ToolTipIcon.None);
-                ((Timer)sender).Stop();
-                //timer.Stop();
-                //timer.Dispose();
-                //if (!isPkapCorrect())
-                //{
-                //    File.Delete(Properties.Settings.Default.vFolder + @"/pkap.0001");
-                //}
-            });
-            timer.Interval = 1000;
-            timer.Start();
+            // Look for pkuld.0001 and pkap.0001 files (file extension is a counter with leading zeros).
+            string pathRequest = Properties.Settings.Default.vFolder + @"/pkuld." + vCount.ToString("D4");
+            string pathResponse = Properties.Settings.Default.vFolder + @"/pkap." + vCount.ToString("D4");
+            bool existsPkuld = File.Exists(pathRequest);
+            bool existsPkap = File.Exists(pathResponse);
+            /*foreach (string file in Directory.EnumerateFiles(Properties.Settings.Default.vFolder, "*.0001"))
+            {
+            }*/
+            if (!existsPkuld && !existsPkap)
+            {
+                using (StreamWriter sw = new StreamWriter(pathRequest, true, Encoding.Default))
+                {
+                    sw.Write("2032-00");
+                }
+                // Start a new timer to watch for a response from Connector.
+                Timer timer = new Timer();
+                timer.Tick += new EventHandler(async (sender, e) =>
+                {
+                    if (File.Exists(pathResponse))
+                    {
+                        // Response found, stop the timer.
+                        ((Timer)sender).Stop();
+                        bool canDeleteResponseFile = false;
+                        // Read response file contents.
+                        string content = File.ReadAllText(pathResponse);
+                        if (content != "03" && content != String.Empty)
+                        {
+                            // Response content is correct and can be sent to server.
+                            // Send response to web server.
+                            try
+                            {
+                                var httpContent = new StringContent(content, Encoding.UTF8, "application/text");
+                                var httpResponse = await httpClient.PostAsync(Properties.Settings.Default.vLink, httpContent);
+                                /*HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Properties.Settings.Default.vLink);
+                                request.Method = "POST";
+                                request.ContentType = "application/text";
+                                byte[] byteArray = Encoding.UTF8.GetBytes(content);
+                                request.ContentLength = byteArray.Length;
+                                // Get the request stream.
+                                var dataStream = request.GetRequestStream();
+                                // Write the data to the request stream.
+                                dataStream.Write(byteArray, 0, byteArray.Length);
+                                // Close the Stream object.
+                                dataStream.Close();*/
+                                canDeleteResponseFile = true;
+                            }
+                            catch (Exception ex) 
+                            {
+                                notify("Server error: " + ex.Message, EventLogEntryType.Error);
+                            }
+                        }
+                        else
+                        {
+                            // Response content is NOT correct and can NOT be sent to server.
+                            notify("Connector response error. " + pathResponse);
+                            // @todo Copy erroneous pkap int oa separate file for debugging?
+                        }
+
+                        // Delete response file.
+                        if (canDeleteResponseFile)
+                        {
+                            File.Delete(pathResponse);
+                        }
+                    }
+                });
+                timer.Interval = 500;
+                timer.Start();
+            }
+            else if (!existsPkuld && existsPkap)
+            {
+                // Edge-case. Kuldes szervernek, Letrohoz uj pkuld
+
+            }
+            else if (existsPkuld && existsPkap)
+            {
+                // Kuldes szervernek, pkuld torol, Letrohoz uj pkuld
+
+            }
+            else if (existsPkuld && !existsPkap)
+            {
+                // Varunk “vegtelenig”
+            }
         }
 
         private void syncProducts()
         {
             // @todo
+            // Get contents from web server.
+            string contents = "";
+            using (WebClient wc = new WebClient())
+            {
+                //wc.Headers.Add(HttpRequestHeader.Accept, "application/json");
+                try
+                {
+                    contents = wc.DownloadString(Properties.Settings.Default.pLink);
+                    //response.statusCode = (int)HttpStatusCode.OK;
+                }
+                catch (WebException ex)
+                {
+                    notify(ex.Message, EventLogEntryType.Error);
+                    return;
+                }
+            }
         }
+        
+        private void notify(string message, EventLogEntryType type = EventLogEntryType.Information)
+        {
+            try
+            {
+                //if (!EventLog.SourceExists("ConnectComm"))
+                //{
+                //    EventLog.CreateEventSource("ConnectComm", "Application");
+                //}
+                //EventLog.WriteEntry("ConnectComm", message, type);
+            }
+            catch (System.Security.SecurityException ex)
+            {
+                notifyIcon1.ShowBalloonTip(500, "ConnectComm", "Failed to write log entry. " + ex.Message, ToolTipIcon.Error);
+            }
+            // Cast from EventLogEntryType to ToolTipIcon.
+            ToolTipIcon icon = (ToolTipIcon)((int)type);
+            notifyIcon1.ShowBalloonTip(500, "ConnectComm", message, ToolTipIcon.Info);
+        }
+
     }
 }
